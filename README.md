@@ -20,7 +20,7 @@ KISS expects one in particular json format, the one that Semantic outputs.
 2. Run it, passing a command like this:
 
 ```
-docker run -v /root/path/to/a/project:/r --entrypoint sh semantic -c "/usr/local/bin/semantic -- parse --json \`find /r/internal/path -name *.js\`" | tail -n 1 > /path/to/output.json`
+docker run -v /root/path/to/a/project:/r --entrypoint sh semantic -c "/usr/local/bin/semantic -- parse --json \`find /r/internal/path -name *.js\`" | tail -n 1 > /path/to/output.json
 ```
 
 Where:
