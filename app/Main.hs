@@ -1,6 +1,6 @@
 module Main where
-import Lib (analyseJSONAst)
 
+import Lib (analyseJSONAst)
 import System.Environment (getArgs)
 
 main :: IO ()

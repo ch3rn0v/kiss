@@ -1,8 +1,4 @@
-module FileProcessor
-    ( RawJSONFile(RawJSONFile)
-    , readJSONFile
-    )
-where
+module FileProcessor (RawJSONFile(RawJSONFile), readJSONFile) where
 
 data RawJSONFile = RawJSONFile FilePath String
 
