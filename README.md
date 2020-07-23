@@ -3,7 +3,7 @@
 The tool calculates arity and statement count for every function in a given project.
 The result is output as a .csv file with the following columns:
 
-`Identifier, Arity, Statements Count, File Path`
+`Identifier, Arity, Max Depth, Statements Count, File Path`
 
 The tool makes use of [Semantic](https://github.com/github/semantic)'s json output.
 (Because as of now, Semantic [isn't published to hackage](https://github.com/github/semantic/issues/16) yet).
