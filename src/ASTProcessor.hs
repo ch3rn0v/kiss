@@ -11,7 +11,7 @@ Parses AST that is output by semantic library
 -}
 module ASTProcessor
        (parseRawJSONFile, FunctionData, Arity, StmtCount, filePath, lineNumber,
-        name, arity, stmtsCount)
+        name, arity, maxDepth, stmtsCount)
        where
 
 import Control.Lens ((^?), cosmos, filtered, toListOf)
@@ -41,6 +41,8 @@ type FunctionIdentifier = String
 
 type Arity = Int
 
+type Depth = Int
+
 type StmtCount = Int
 
 type RawStatementsData = IM.IntMap [Text]
@@ -50,6 +52,7 @@ data FunctionData = FunctionData { filePath :: FilePath
                                  , language :: Language
                                  , name :: FunctionIdentifier
                                  , arity :: Arity
+                                 , maxDepth :: Depth
                                  , stmtsCount :: StmtCount }
                     deriving Show
 
@@ -112,7 +115,7 @@ parseAllStatements
 parseFunctionObject :: FilePath -> Language -> Object -> Parser FunctionData
 parseFunctionObject path _language o
   = do sourceSpan <- o .: "sourceSpan"
-       [oLineNumber, _] <- sourceSpan .: "start"
+       [_lineNumber, _] <- sourceSpan .: "start"
        functionName <- o .: "functionName"
        _name <- functionName .: "name"
        (parameters :: [Value]) <- o .: "functionParameters"
@@ -121,12 +124,15 @@ parseFunctionObject path _language o
 
        let (allStatements :: [DepthStatementData])
              = parseAllStatements outerStatements
+       let (_maxDepth :: Depth)
+             = if length ds > 0 then maximum ds else 0
+               where ds = map (\ (d, _) -> d) allStatements
        let (statementsDepthMap :: RawStatementsData)
              = IM.fromListWith (++) allStatements
 
        return $
-         FunctionData path oLineNumber _language _name (length parameters)
-           (length $ concat $ IM.elems statementsDepthMap)
+         FunctionData path _lineNumber _language _name (length parameters)
+            _maxDepth (length $ concat $ IM.elems statementsDepthMap)
 
 parseTreeFunctions :: TreeData -> [Either String FunctionData]
 parseTreeFunctions (TreeData _rootNode _treeFilePath _treeLanguage)

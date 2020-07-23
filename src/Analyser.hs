@@ -10,12 +10,16 @@ import Helpers (makeScaler)
 import Numeric.Extra (intToDouble)
 
 import ASTProcessor
-       (FunctionData, arity, filePath, lineNumber, name, stmtsCount)
+       (FunctionData, arity, filePath, lineNumber, name,
+        maxDepth, stmtsCount)
 
 type CSV = String
 
 arityScalerMaker :: [FunctionData] -> (FunctionData -> Double)
 arityScalerMaker = makeScaler (intToDouble . arity)
+
+depthScalerMaker :: [FunctionData] -> (FunctionData -> Double)
+depthScalerMaker = makeScaler (intToDouble . maxDepth)
 
 stmtsCountScalerMaker :: [FunctionData] -> (FunctionData -> Double)
 stmtsCountScalerMaker = makeScaler (intToDouble . stmtsCount)
@@ -25,11 +29,13 @@ stmtsCountScalerMaker = makeScaler (intToDouble . stmtsCount)
 functionDataToCsv :: [FunctionData] -> CSV
 functionDataToCsv fds
   = unlines $
-      (:) "Identifier,Arity,Statements Count,File Path" $
+      (:) "Identifier,Arity,Max Depth,Statements Count,File Path" $
         map
           (\ fd -> name fd
                     ++ ","
                     ++ show (arity fd)
+                    ++ ","
+                    ++ show (maxDepth fd)
                     ++ ","
                     ++ show (stmtsCount fd)
                     ++ ","
@@ -37,7 +43,10 @@ functionDataToCsv fds
                     ++ ":"
                     ++ show (lineNumber fd))
 
-          $ sortOn (\ fd -> -1 * (arityScaler fd + stmtsCountScaler fd)) fds
+          $ sortOn (\ fd -> -1 * ( arityScaler fd
+                                 + depthScaler fd
+                                 + stmtsCountScaler fd)) fds
 
   where arityScaler = arityScalerMaker fds
+        depthScaler = depthScalerMaker fds
         stmtsCountScaler = stmtsCountScalerMaker fds
