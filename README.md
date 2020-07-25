@@ -53,7 +53,12 @@ Example:
 
 # Example of KISS Output's Visualization
 
-To be added.
+![KISS output's visualization](https://i.imgur.com/7JQMuAk.png)
+![KISS output's visualization](https://i.imgur.com/MVOYBJ8.png)
+![KISS output's visualization](https://i.imgur.com/ocvFNio.png)
+![KISS output's visualization](https://i.imgur.com/gfl4e0R.png)
+![KISS output's visualization](https://i.imgur.com/Mnp74ZZ.png)
+![KISS output's visualization](https://i.imgur.com/JJ38Mao.png)
 
 # Acknowledgements
 
